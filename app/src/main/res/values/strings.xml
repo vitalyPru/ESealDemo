@@ -20,5 +20,9 @@
     <string name="no_required_permission">Permission denied.</string>
     <string name="eseal_action">SEAL DATA</string>
     <string name="eseal_action_disconnect">DISCONNECT</string>
+    <string name="not_supported">Not supported</string>
+    <string name="bonding">Bonding</string>
+    <string name="bonded">Bonded</string>
+    <string name="w_id_prompt">ID троса</string>
 
 </resources>
