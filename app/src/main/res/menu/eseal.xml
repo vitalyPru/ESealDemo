@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="@string/eseal_action"
+        android:id="@+id/action_eseal_waiting"
+        android:title="@string/logged"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_eseal_disconnect"
-        android:title="@string/eseal_action_disconnect"
-        app:showAsAction="always" />
+    <!-- Color is Brown 500 -->
+
+
 </menu>

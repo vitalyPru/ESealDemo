@@ -62,15 +62,26 @@ public  class ESealManager {
     protected ESealManagerCallbacks mCallbacks;
     private BluetoothGatt mBluetoothGatt;
 
-    private boolean mConnected;
+    private boolean mConnected = false;
     private int mConnectionState = BluetoothGatt.STATE_DISCONNECTED;
 
+    private static ESealManager managerInstance = null;
 
-    public ESealManager(final Context context, boolean connected) {
+    /**
+     * singleton implementation of HRSManager class
+     */
+    public static synchronized ESealManager getInstance(final Context context) {
+        if (managerInstance == null) {
+            managerInstance = new ESealManager(context);
+        }
+        return managerInstance;
+    }
+
+
+    public ESealManager(final Context context) {
         /*super(context);*/
         mHandler = new Handler();
         mContext = context;
-        mConnected = connected;
     }
 
     public void setGattCallbacks(@NonNull ESealManagerCallbacks  callbacks) {
@@ -276,6 +287,7 @@ public  class ESealManager {
      * Sends the given text to RX characteristic.
      * @param text the text to be sent
      */
+
     public void send(final String text) {
         // Are we connected?
         if (mRXCharacteristic == null)

@@ -1,10 +1,9 @@
 package ru.spb.gamma.esealdemo;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,9 +13,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ESealActivity extends AppCompatActivity implements ESealManagerCallbacks {
 
@@ -29,6 +30,8 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
     private BluetoothDevice mDevice;
     private View mLayout;
     private TextView mEsealInfo;
+    private final Queue<String> mSendQueue = new LinkedList<>();
+    private MenuItem mWaitingMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,28 +41,31 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
                 (Toolbar) findViewById(R.id.eseal_toolbar);
         setSupportActionBar(myChildToolbar);
         mLayout =  findViewById(R.id.eseal_data_layout);
-        mEsealInfo = findViewById(R.id.esealInfo);
+        mEsealInfo = findViewById(R.id.board_prompt);
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
-        ab.setTitle("");
+        ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
+                | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        //ab.setTitle("");
 
         // Enable the Up button
         ab.setDisplayHomeAsUpEnabled(true);
 
 
+        mEsealManager = ESealManager.getInstance(getApplicationContext());
+        mEsealManager.setGattCallbacks(this);
+        // The onCreateView class should... create the view
+//        onCreateView(savedInstanceState);
         if(savedInstanceState == null) {
             Intent intent = getIntent();
             mDevice = (BluetoothDevice) intent.getParcelableExtra("BLE_DEVICE");
             mDeviceOpened = false;
             mDeviceConnected = false;
-            mEsealManager = new ESealManager(this, false);
-            mEsealManager.setGattCallbacks(this);
         } else {
             mDeviceConnected = savedInstanceState.getBoolean(SIS_CONNECTION_STATUS);
             mDeviceOpened = savedInstanceState.getBoolean(SIS_OPEN_STATUS);
             mDevice = savedInstanceState.getParcelable(SIS_DEVICE);
-            mEsealManager = new ESealManager(this,mDeviceConnected);
-            mEsealManager.setGattCallbacks(this);
         }
         if (!mDeviceConnected) {
             if (mDevice != null) {
@@ -68,10 +74,21 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
         }
         if (mDeviceOpened) {
             mLayout.setVisibility(View.VISIBLE);
-            mEsealManager.send("getInfo\r\n");
+            mSendQueue.offer("getInfo\r\n");
+            mSendQueue.offer("getParams\r\n");
+            send_next();
         } else {
             mLayout.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private boolean send_next() {
+        String e = mSendQueue.poll();
+        if ( e != null ) {
+            mEsealManager.send(e);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -94,6 +111,11 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.eseal, menu);
+        mWaitingMenuItem = menu.findItem(R.id.action_eseal_waiting);
+        if(!mDeviceOpened) {
+            mWaitingMenuItem.setActionView(R.layout.waiting_view);
+            mWaitingMenuItem.expandActionView();
+        }
         return true;
     }
 
@@ -104,8 +126,10 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.action_eseal_disconnect:
-                mEsealManager.disconnect();
+            case R.id.action_eseal_waiting:
+//                mEsealManager.disconnect();
+//                mWaitingMenuItem = item;
+
                 return true;
             // action with ID action_settings was selected
             default:
@@ -123,29 +147,28 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
 
     @Override
     public void onDataReceived(final BluetoothDevice device, final String data) {
-//        final Intent broadcast = new Intent(BROADCAST_UART_RX);
-//        broadcast.putExtra(EXTRA_DEVICE, getBluetoothDevice());
-//        broadcast.putExtra(EXTRA_DATA, data);
- //       LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
+        if(mDeviceOpened) {
+            Queue<Pair<Integer,String>> parsed_commands = ParserUtils.parse_data(data);
+            for( Pair pair : parsed_commands ) {
+                TextView control = findViewById((int)pair.first);
+                runOnUiThread(() -> {
+                    control.setText((String)pair.second);
+                });
+            }
+        }
 
-        // send the data received to other apps, e.g. the Tasker
-//        final Intent globalBroadcast = new Intent(ACTION_RECEIVE);
-//        globalBroadcast.putExtra(BluetoothDevice.EXTRA_DEVICE, getBluetoothDevice());
-//        globalBroadcast.putExtra(Intent.EXTRA_TEXT, data);
- //       sendBroadcast(globalBroadcast);
         if("getPair=125\r\n".equals(data)){
             runOnUiThread(() -> {
                 mLayout.setVisibility(View.VISIBLE);
                 mDeviceOpened = true;
+                mWaitingMenuItem.collapseActionView();
+                mWaitingMenuItem.setActionView(null);
             });
-            mEsealManager.send("getInfo\r\n");
+            mSendQueue.offer("getInfo\r\n");
+            mSendQueue.offer("getParams\r\n");
+            send_next();
         }
 
-        if(mDeviceOpened) {
-            runOnUiThread(() -> {
-                mEsealInfo.setText(data);
-            });
-        }
     }
 
     @Override
@@ -155,6 +178,7 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
 //        broadcast.putExtra(EXTRA_DATA, data);
 //        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
 //        mEsealManager.send("getParams\r\n");
+        send_next();
     }
     @Override
     public void onDeviceConnecting(final BluetoothDevice device) {

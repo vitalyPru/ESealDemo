@@ -67,7 +67,7 @@ public class DeviceActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setTitle("");
+
         // ensure that Bluetooth exists
         if (!ensureBLEExists())
             finish();
