@@ -19,296 +19,355 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:subtitleTextAppearance="@android:style/TextAppearance.Material.Small"
         app:title="@string/eseal_info"/>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/eseal_data_layout"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:scrollbars="horizontal|vertical"
-        android:visibility="invisible">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/board_prompt"
-            android:layout_width="wrap_content"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/eseal_data_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/board_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginLeft="10dp"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/board_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/board_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-        <TextView
-            android:id="@+id/board_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/board_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/board_prompt" />
+            <TextView
+                android:id="@+id/board_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/board_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/board_prompt" />
 
-        <TextView
-            android:id="@+id/board_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/board_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/board_name" />
+            <TextView
+                android:id="@+id/board_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/board_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/board_name" />
 
-        <TextView
-            android:id="@+id/board_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/board_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/board_version" />
+            <TextView
+                android:id="@+id/board_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/board_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/board_version" />
 
-        <TextView
-            android:id="@+id/gps_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gps_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/board_prompt" />
+            <TextView
+                android:id="@+id/gps_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gps_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/board_prompt" />
 
-        <TextView
-            android:id="@+id/gps_lat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/gps_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/gps_prompt" />
+            <TextView
+                android:id="@+id/gps_lat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/gps_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/gps_prompt" />
 
-        <TextView
-            android:id="@+id/gps_lon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/gps_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/gps_lat" />
+            <TextView
+                android:id="@+id/gps_lon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/gps_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/gps_lat" />
 
-        <TextView
-            android:id="@+id/gps_alt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/gps_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/gps_lon" />
+            <TextView
+                android:id="@+id/gps_alt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/gps_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/gps_lon" />
 
-        <TextView
-            android:id="@+id/wire_id_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/w_id_prompt"
-            app:layout_constraintBaseline_toBaselineOf="@+id/wire_id"
-            app:layout_constraintLeft_toLeftOf="parent">
+            <TextView
+                android:id="@+id/wire_id_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/w_id_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintBaseline_toBaselineOf="@+id/wire_id"
+                app:layout_constraintRight_toRightOf="@+id/doc_id_prompt">
 
-        </TextView>
+            </TextView>
 
 
-        <EditText
-            android:id="@+id/wire_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textCapCharacters"
-            app:layout_constraintLeft_toRightOf="@+id/wire_id_prompt"
-            app:layout_constraintTop_toBottomOf="@+id/battery_prompt" />
+            <EditText
+                android:id="@+id/wire_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textCapCharacters"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                app:layout_constraintLeft_toRightOf="@+id/wire_id_prompt"
+                app:layout_constraintTop_toBottomOf="@+id/battery_prompt" />
 
-        <ImageButton
-            android:id="@+id/set_wire_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/checkbox_on_background"
-            app:layout_constraintLeft_toRightOf="@+id/wire_id"
-            app:layout_constraintTop_toTopOf="@+id/wire_id" />
+            <ImageButton
+                android:id="@+id/set_wire_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/edit_icon"
+                app:layout_constraintLeft_toRightOf="@+id/wire_id"
+                app:layout_constraintTop_toTopOf="@+id/wire_id" />
 
-        <TextView
-            android:id="@+id/doc_id_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="@string/w_id_prompt2"
-            app:layout_constraintBaseline_toBaselineOf="@+id/doc_id"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            <TextView
+                android:id="@+id/doc_id_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/w_id_prompt2"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintBaseline_toBaselineOf="@+id/doc_id"
+                app:layout_constraintLeft_toLeftOf="parent" />
 
-        <EditText
-            android:id="@+id/doc_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textCapCharacters"
-            app:layout_constraintLeft_toRightOf="@+id/doc_id_prompt"
-            app:layout_constraintTop_toBottomOf="@+id/wire_id" />
+            <EditText
+                android:id="@+id/doc_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textCapCharacters"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                app:layout_constraintLeft_toRightOf="@+id/doc_id_prompt"
+                app:layout_constraintTop_toBottomOf="@+id/wire_id" />
 
-        <ImageButton
-            android:id="@+id/set_doc_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/doc_id"
-            app:layout_constraintTop_toTopOf="@+id/doc_id"
-            app:srcCompat="@android:drawable/checkbox_on_background" />
+            <ImageButton
+                android:id="@+id/set_doc_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/doc_id"
+                app:layout_constraintTop_toTopOf="@+id/doc_id"
+                app:srcCompat="@drawable/edit_icon" />
 
-        <CheckedTextView
-            android:id="@+id/wake_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:editable="false"
-            android:text="@string/wake_flag"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/doc_id" />
+            <CheckedTextView
+                android:id="@+id/wake_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkMark="?android:attr/textCheckMark"
+                android:gravity="center"
+                android:text="@string/wake_flag"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/doc_id" />
 
-        <CheckedTextView
-            android:id="@+id/arm_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:editable="false"
-            android:text="@string/arm_flag"
-            app:layout_constraintLeft_toRightOf="@+id/wake_flag"
-            app:layout_constraintTop_toTopOf="@+id/wake_flag" />
+            <CheckedTextView
+                android:id="@+id/arm_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:checkMark="?android:attr/textCheckMark"
+                android:gravity="center"
+                android:text="@string/arm_flag"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toRightOf="@+id/wake_flag"
+                app:layout_constraintTop_toTopOf="@+id/wake_flag" />
 
-        <CheckedTextView
-            android:id="@+id/alarm_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/alarm_flag"
-            app:layout_constraintLeft_toRightOf="@+id/arm_flag"
-            app:layout_constraintTop_toTopOf="@+id/wake_flag" />
+            <CheckedTextView
+                android:id="@+id/alarm_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:checkMark="?android:attr/textCheckMark"
+                android:gravity="center"
+                android:text="@string/alarm_flag"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toRightOf="@+id/arm_flag"
+                app:layout_constraintTop_toTopOf="@+id/wake_flag" />
 
-        <CheckedTextView
-            android:id="@+id/tamper_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tamper_flag"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wake_flag" />
+            <CheckedTextView
+                android:id="@+id/tamper_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkMark="?android:attr/textCheckMark"
+                android:gravity="center"
+                android:text="@string/tamper_flag"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/wake_flag" />
 
-        <CheckedTextView
-            android:id="@+id/cable_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cable_flag"
-            app:layout_constraintLeft_toRightOf="@+id/tamper_flag"
-            app:layout_constraintTop_toTopOf="@+id/tamper_flag" />
+            <CheckedTextView
+                android:id="@+id/cable_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:checkMark="?android:attr/textCheckMark"
+                android:gravity="center"
+                android:text="@string/cable_flag"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toRightOf="@+id/tamper_flag"
+                app:layout_constraintTop_toTopOf="@+id/tamper_flag" />
 
-        <TextView
-            android:id="@+id/battery_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/battery_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gps_prompt" />
+            <TextView
+                android:id="@+id/battery_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/battery_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/gps_prompt" />
 
-        <TextView
-            android:id="@+id/battery_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/battery_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/battery_gauge" />
+            <TextView
+                android:id="@+id/battery_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/battery_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/battery_prompt" />
 
-        <ProgressBar
-            android:id="@+id/battery_gauge"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:max="100"
-            app:layout_constraintLeft_toRightOf="@+id/battery_prompt"
-            app:layout_constraintTop_toTopOf="@+id/battery_prompt" />
+            <ProgressBar
+                android:id="@+id/battery_gauge"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:max="100"
+                app:layout_constraintLeft_toRightOf="@+id/battery_value"
+                app:layout_constraintTop_toTopOf="@+id/battery_prompt" />
 
-        <TextView
-            android:id="@+id/lora_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lora_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tamper_flag" />
+            <TextView
+                android:id="@+id/lora_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lora_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Headline"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tamper_flag" />
 
-        <TextView
-            android:id="@+id/lora_tamper_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lora_tanper_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lora_prompt" />
+            <TextView
+                android:id="@+id/lora_tamper_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lora_tanper_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lora_prompt" />
 
-        <TextView
-            android:id="@+id/lora_tamper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/lora_tamper_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/lora_tamper_prompt" />
+            <TextView
+                android:id="@+id/lora_tamper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lora_tamper_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/lora_tamper_prompt" />
 
-        <TextView
-            android:id="@+id/lora_rssi_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lora_rssi_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lora_tamper_prompt" />
+            <TextView
+                android:id="@+id/lora_rssi_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lora_rssi_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lora_tamper_prompt" />
 
-        <TextView
-            android:id="@+id/lora_rssi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/lora_rssi_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/lora_rssi_prompt" />
+            <TextView
+                android:id="@+id/lora_rssi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lora_rssi_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/lora_rssi_prompt" />
 
-        <TextView
-            android:id="@+id/lora_hall_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lora_hall_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lora_rssi_prompt" />
+            <TextView
+                android:id="@+id/lora_hall_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lora_hall_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lora_rssi_prompt" />
 
-        <TextView
-            android:id="@+id/loa_hall_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/lora_hall_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/lora_hall_prompt" />
+            <TextView
+                android:id="@+id/loa_hall_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lora_hall_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/lora_hall_prompt" />
 
-        <TextView
-            android:id="@+id/lora_hall_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/lora_hall_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/loa_hall_1" />
+            <TextView
+                android:id="@+id/lora_hall_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lora_hall_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/loa_hall_1" />
 
-        <TextView
-            android:id="@+id/lora_battery_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/lora_battery_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lora_hall_prompt" />
+            <TextView
+                android:id="@+id/lora_battery_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lora_battery_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lora_hall_prompt" />
 
-        <TextView
-            android:id="@+id/lora_battery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/lora_battery_prompt"
-            app:layout_constraintLeft_toRightOf="@+id/lora_battery_prompt" />
+            <TextView
+                android:id="@+id/lora_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lora_battery_prompt"
+                app:layout_constraintLeft_toRightOf="@+id/lora_battery_prompt" />
 
-        <Button
-            android:id="@+id/arm_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/arm_button"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/arm_prompt" />
+            <ProgressBar
+                android:id="@+id/lora_battery_gauge"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintLeft_toRightOf="@+id/lora_battery"
+                app:layout_constraintTop_toTopOf="@+id/lora_battery_prompt" />
 
-        <TextView
-            android:id="@+id/arm_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/arm_prompt"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lora_battery_prompt" />
+            <Button
+                android:id="@+id/arm_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/arm_button"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/arm_prompt" />
 
-        <Button
-            android:id="@+id/disarm_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/disarm_button"
-            app:layout_constraintLeft_toRightOf="@+id/arm_button"
-            app:layout_constraintTop_toTopOf="@+id/arm_button" />
+            <TextView
+                android:id="@+id/arm_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/arm_prompt"
+                android:textAppearance="@android:style/TextAppearance.Material.Headline"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lora_battery_prompt" />
 
-    </android.support.constraint.ConstraintLayout>
+            <Button
+                android:id="@+id/disarm_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/disarm_button"
+                app:layout_constraintLeft_toRightOf="@+id/arm_button"
+                app:layout_constraintTop_toTopOf="@+id/arm_button" />
 
+
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </LinearLayout>

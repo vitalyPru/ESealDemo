@@ -8,7 +8,7 @@
         android:title="@string/scan"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/settings"
+        android:id="@+id/action_about"
+        android:title="@string/about"
         app:showAsAction="never" />
 </menu>

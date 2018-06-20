@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothManager;
 //import android.bluetooth.le.ScanFilter;
 //import android.bluetooth.le.ScanSettings;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -134,9 +136,16 @@ public class DeviceActivity extends AppCompatActivity {
 
                 break;
             // action with ID action_settings was selected
-            case R.id.action_settings:
-                Toast.makeText(this, "Settings selected", Toast.LENGTH_SHORT)
-                        .show();
+            case R.id.action_about:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("ESealDemo");
+                builder.setMessage("Версия: 1.0");
+                builder.setPositiveButton("OK",       new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int which) {   }});
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
                 break;
             default:
                 break;

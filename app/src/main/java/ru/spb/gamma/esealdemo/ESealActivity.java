@@ -13,13 +13,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class ESealActivity extends AppCompatActivity implements ESealManagerCallbacks {
+public class ESealActivity extends AppCompatActivity implements ESealManagerCallbacks , LogFragment.OnListFragmentInteractionListener {
 
     private static final String SIS_CONNECTION_STATUS = "connection_status";
     private static final String SIS_OPEN_STATUS = "device_open_status";
@@ -29,7 +33,6 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
     private boolean mDeviceOpened = false;
     private BluetoothDevice mDevice;
     private View mLayout;
-    private TextView mEsealInfo;
     private final Queue<String> mSendQueue = new LinkedList<>();
     private MenuItem mWaitingMenuItem;
 
@@ -41,22 +44,38 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
                 (Toolbar) findViewById(R.id.eseal_toolbar);
         setSupportActionBar(myChildToolbar);
         mLayout =  findViewById(R.id.eseal_data_layout);
-        mEsealInfo = findViewById(R.id.board_prompt);
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
         ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
-
-        //ab.setTitle("");
-
         // Enable the Up button
         ab.setDisplayHomeAsUpEnabled(true);
 
+        findViewById(R.id.arm_button).setOnClickListener(v -> {
+            arm();
+            send_next();
+
+        });
+
+        findViewById(R.id.disarm_button).setOnClickListener(v -> {
+            disarm();
+            send_next();
+
+        });
+
+        findViewById(R.id.set_wire_button).setOnClickListener(v -> {
+            set_wire();
+            send_next();
+
+        });
+
+        findViewById(R.id.set_doc_button).setOnClickListener(v -> {
+            set_doc();
+            send_next();
+        });
 
         mEsealManager = ESealManager.getInstance(getApplicationContext());
         mEsealManager.setGattCallbacks(this);
-        // The onCreateView class should... create the view
-//        onCreateView(savedInstanceState);
         if(savedInstanceState == null) {
             Intent intent = getIntent();
             mDevice = (BluetoothDevice) intent.getParcelableExtra("BLE_DEVICE");
@@ -67,6 +86,7 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
             mDeviceOpened = savedInstanceState.getBoolean(SIS_OPEN_STATUS);
             mDevice = savedInstanceState.getParcelable(SIS_DEVICE);
         }
+        ab.setSubtitle(mDevice.getAddress());
         if (!mDeviceConnected) {
             if (mDevice != null) {
                 mEsealManager.connect(mDevice);
@@ -74,8 +94,7 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
         }
         if (mDeviceOpened) {
             mLayout.setVisibility(View.VISIBLE);
-            mSendQueue.offer("getInfo\r\n");
-            mSendQueue.offer("getParams\r\n");
+            prepare_all_data_request();
             send_next();
         } else {
             mLayout.setVisibility(View.INVISIBLE);
@@ -86,6 +105,9 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
         String e = mSendQueue.poll();
         if ( e != null ) {
             mEsealManager.send(e);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentDateandTime = sdf.format(new Date());
+            LogContent.ITEMS.add(new LogContent.LogItem(currentDateandTime, e ,0));
             return true;
         }
         return false;
@@ -127,9 +149,11 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
                 onBackPressed();
                 return true;
             case R.id.action_eseal_waiting:
-//                mEsealManager.disconnect();
-//                mWaitingMenuItem = item;
-
+                prepare_all_data_request();
+                send_next();
+                return true;
+            case R.id.action_show_log:
+                showLog();
                 return true;
             // action with ID action_settings was selected
             default:
@@ -144,16 +168,16 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
         super.onBackPressed();
     }
 
-
     @Override
     public void onDataReceived(final BluetoothDevice device, final String data) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentDateandTime = sdf.format(new Date());
+        LogContent.ITEMS.add(new LogContent.LogItem(currentDateandTime, data, 1));
         if(mDeviceOpened) {
-            Queue<Pair<Integer,String>> parsed_commands = ParserUtils.parse_data(data);
+            Queue<Pair<DispItem,String>> parsed_commands = ParserUtils.parse_data(data);
             for( Pair pair : parsed_commands ) {
-                TextView control = findViewById((int)pair.first);
-                runOnUiThread(() -> {
-                    control.setText((String)pair.second);
-                });
+                DispItem disp_item = (DispItem) pair.first;
+                disp_item.display_data(this, (String) pair.second);
             }
         }
 
@@ -164,65 +188,80 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
                 mWaitingMenuItem.collapseActionView();
                 mWaitingMenuItem.setActionView(null);
             });
-            mSendQueue.offer("getInfo\r\n");
-            mSendQueue.offer("getParams\r\n");
+            prepare_all_data_request();
             send_next();
         }
 
     }
 
+    private void prepare_all_data_request() {
+        mSendQueue.offer("getInfo\r\n");
+        mSendQueue.offer("getParams\r\n");
+        mSendQueue.offer("getInvoice\r\n");
+        mSendQueue.offer("getID\r\n");
+
+    }
+
+    private void arm() {
+        set_wire();
+        set_doc();
+        mSendQueue.offer("arm\r\n");
+
+    }
+
+    private void disarm(){
+        mSendQueue.offer("disarm\r\n");
+    }
+
+    private void set_wire() {
+        mSendQueue.offer("setID="+((EditText)findViewById(R.id.wire_id)).getText()+"\r\n");
+    }
+
+    private void set_doc() {
+        mSendQueue.offer("setInvoice="+((EditText)findViewById(R.id.doc_id)).getText()+"\r\n");
+    }
+
+
+    protected void showLog() {
+        runOnUiThread(() -> {
+            final LogFragment dialog = LogFragment.newInstance(1);
+            dialog.show(getSupportFragmentManager(), "scan_fragment");
+        });
+    }
+
+
     @Override
     public void onDataSent(final BluetoothDevice device, final String data) {
-//        final Intent broadcast = new Intent(BROADCAST_UART_TX);
-//        broadcast.putExtra(EXTRA_DEVICE, getBluetoothDevice());
-//        broadcast.putExtra(EXTRA_DATA, data);
-//        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
-//        mEsealManager.send("getParams\r\n");
         send_next();
     }
     @Override
     public void onDeviceConnecting(final BluetoothDevice device) {
-//        runOnUiThread(() -> {
-//            mDeviceNameView.setText(mDeviceName != null ? mDeviceName : getString(R.string.not_available));
-//            mConnectButton.setText(R.string.action_connecting);
-//        });
     }
 
     @Override
     public void onDeviceConnected(final BluetoothDevice device) {
         mDeviceConnected = true;
- //       runOnUiThread(() -> mConnectButton.setText(R.string.action_disconnect));
     }
 
     @Override
     public void onDeviceDisconnecting(final BluetoothDevice device) {
- //       runOnUiThread(() -> mConnectButton.setText(R.string.action_disconnecting));
     }
 
     @Override
     public void onDeviceDisconnected(final BluetoothDevice device) {
         mDeviceConnected = false;
         mEsealManager.close();
-//        runOnUiThread(() -> {
-//            mConnectButton.setText(R.string.action_connect);
- //           mDeviceNameView.setText(getDefaultDeviceName());
- //           mBatteryLevelView.setText(R.string.not_available);
-//        });
     }
 
     @Override
     public void onLinkLossOccurred(final BluetoothDevice device) {
         mDeviceConnected = false;
-//       runOnUiThread(() -> {
-//            if (mBatteryLevelView != null)
-//                mBatteryLevelView.setText(R.string.not_available);
-//        });
     }
-@Override
-public void onError(final BluetoothDevice device, final String message, final int errorCode) {
-//    DebugLogger.e(TAG, "Error occurred: " + message + ",  error code: " + errorCode);
-    showToast(message + " (" + errorCode + ")");
-}
+
+    @Override
+    public void onError(final BluetoothDevice device, final String message, final int errorCode) {
+        showToast(message + " (" + errorCode + ")");
+    }
 
     @Override
     public void onDeviceNotSupported(final BluetoothDevice device) {
@@ -246,7 +285,6 @@ public void onError(final BluetoothDevice device, final String message, final in
 
     @Override
     public void onDeviceReady(final BluetoothDevice device) {
-        // empty default implementation
         mEsealManager.send("getPair\r\n");
     }
 
@@ -269,4 +307,8 @@ public void onError(final BluetoothDevice device, final String message, final in
     }
 
 
+    @Override
+    public void onListFragmentInteraction(LogContent.LogItem item) {
+
+    }
 }

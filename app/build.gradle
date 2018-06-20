@@ -16,6 +16,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions 'version'
+    productFlavors {
+        prod {
+            dimension 'version'
+            applicationId "ru.spb.gamma.esealdemo"
+            versionCode 1
+            versionName "1.0.0"
+        }
+        dev {
+            dimension 'version'
+            applicationId "ru.spb.gamma.esealdemo.dev"
+            versionCode 1
+            versionName "1.0.0"
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def project = "ESealDemo"
+            def SEP = "_"
+            def flavor = variant.productFlavors[0].name
+            def buildType = variant.variantData.variantConfiguration.buildType.name
+            def version = variant.versionName
+            def date = new Date();
+            def formattedDate = date.format('ddMMyy_HHmm')
+
+            def newApkName = project + SEP + flavor + SEP + buildType + SEP + version + SEP + formattedDate + ".apk"
+
+            outputFileName = new File(newApkName)
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -34,6 +65,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.android.support:mediarouter-v7:27.1.1'
     implementation 'no.nordicsemi.android.support.v18:scanner:1.1.0'
+    implementation 'no.nordicsemi.android:log:2.1.1'
 
     implementation 'com.android.support:design:27.1.1'
 }

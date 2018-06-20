@@ -6,6 +6,10 @@
         android:id="@+id/action_eseal_waiting"
         android:title="@string/logged"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/action_show_log"
+        android:title="Log"
+        app:showAsAction="never" />
     <!-- Color is Brown 500 -->
 
 

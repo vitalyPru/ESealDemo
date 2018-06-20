@@ -7,6 +7,7 @@
     <string name="seal_icon_descr">seal_icon</string>
     <string name="devices_bar">Устройства</string>
     <string name="settings">Настройки</string>
+    <string name="about">О приложении</string>
     <string name="scan">ИСКАТЬ</string>
     <string name="no_ble">Device doesn\'t have BLE support!</string>
     <string name="scanner_subtitle_not_bonded">Not Bonded</string>
@@ -23,18 +24,18 @@
     <string name="not_supported">Not supported</string>
     <string name="bonding">Bonding</string>
     <string name="bonded">Bonded</string>
-    <string name="w_id_prompt">ID троса</string>
-    <string name="w_id_prompt2">ID накладной</string>
+    <string name="w_id_prompt">Трос</string>
+    <string name="w_id_prompt2">Накладная</string>
     <string name="logged">ОБНОВИТЬ</string>
     <string name="board_prompt">Плата:</string>
-    <string name="gps_prompt">Координаты</string>
+    <string name="gps_prompt">Координаты:</string>
     <string name="wake_flag">Активность</string>
     <string name="arm_flag">Охрана</string>
     <string name="alarm_flag">Тревога</string>
     <string name="tamper_flag">Вскрытие</string>
     <string name="cable_flag">Состояние троса</string>
     <string name="battery_prompt">Состояние батареи :</string>
-    <string name="lora_prompt">Параметры модуля LoRa</string>
+    <string name="lora_prompt">Параметры модуля LPWAN</string>
     <string name="lora_tanper_prompt">Счетчик вскрытий:</string>
     <string name="lora_rssi_prompt">Уровень сигнала:</string>
     <string name="lora_hall_prompt">Датчики холла:</string>
@@ -42,5 +43,6 @@
     <string name="arm_button">Поставить</string>
     <string name="disarm_button">СНЯТЬ</string>
     <string name="arm_prompt">Управление охраной</string>
+    <string name="revision_str">Версия: </string>
 
 </resources>
