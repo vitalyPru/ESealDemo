@@ -199,11 +199,6 @@ public class DeviceActivity extends AppCompatActivity {
         // Bluetooth LE devices. This is related to beacons as proximity devices.
         // On API older than Marshmallow the following code does nothing.
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // When user pressed Deny and still wants to use this functionality, show the rationale
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) /* && mPermissionRationale.getVisibility() == View.GONE*/) {
-//                mPermissionRationale.setVisibility(View.VISIBLE);
-//                return;
-//            }
 
             this.requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_PERMISSION_REQ_CODE);
             return;

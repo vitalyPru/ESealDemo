@@ -133,6 +133,14 @@
                 app:layout_constraintLeft_toRightOf="@+id/wire_id"
                 app:layout_constraintTop_toTopOf="@+id/wire_id" />
 
+            <ImageButton
+                android:id="@+id/wire_camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/camera_icon"
+                app:layout_constraintLeft_toRightOf="@+id/set_wire_button"
+                app:layout_constraintTop_toTopOf="@+id/wire_id" />
+
             <TextView
                 android:id="@+id/doc_id_prompt"
                 android:layout_width="wrap_content"
@@ -160,6 +168,15 @@
                 app:layout_constraintLeft_toRightOf="@+id/doc_id"
                 app:layout_constraintTop_toTopOf="@+id/doc_id"
                 app:srcCompat="@drawable/edit_icon" />
+
+
+            <ImageButton
+                android:id="@+id/doc_camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@+id/set_doc_button"
+                app:layout_constraintTop_toTopOf="@+id/doc_id"
+                app:srcCompat="@drawable/camera_icon" />
 
             <CheckedTextView
                 android:id="@+id/wake_flag"

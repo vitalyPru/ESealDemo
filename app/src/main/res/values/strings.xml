@@ -44,5 +44,8 @@
     <string name="disarm_button">СНЯТЬ</string>
     <string name="arm_prompt">Управление охраной</string>
     <string name="revision_str">Версия: </string>
+    <string name="txt_message">Номер троса: </string>
+    <string name="low_storage_error">Недостаточно памяти</string>
+    <string name="no_camera_permission">Нет разрешения для камеры</string>
 
 </resources>

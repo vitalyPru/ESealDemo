@@ -1,5 +1,7 @@
 package ru.spb.gamma.esealdemo;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -9,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +19,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -35,6 +40,8 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
     private View mLayout;
     private final Queue<String> mSendQueue = new LinkedList<>();
     private MenuItem mWaitingMenuItem;
+    private static final int RC_WIRE_CAPTURE = 9003;
+    private static final int RC_DOC_CAPTURE = 9004;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +79,22 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
         findViewById(R.id.set_doc_button).setOnClickListener(v -> {
             set_doc();
             send_next();
+        });
+
+        findViewById(R.id.wire_camera_button).setOnClickListener(v -> {
+            Intent intent = new Intent(this, CameraActivity.class);
+            intent.putExtra(CameraActivity.AutoFocus, "true");
+            intent.putExtra(CameraActivity.UseFlash, true);
+
+            startActivityForResult(intent, RC_WIRE_CAPTURE);
+        });
+
+        findViewById(R.id.doc_camera_button).setOnClickListener(v -> {
+            Intent intent = new Intent(this, CameraActivity.class);
+            intent.putExtra(CameraActivity.AutoFocus, "true");
+            intent.putExtra(CameraActivity.UseFlash, true);
+
+            startActivityForResult(intent, RC_DOC_CAPTURE);
         });
 
         mEsealManager = ESealManager.getInstance(getApplicationContext());
@@ -168,6 +191,43 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
         super.onBackPressed();
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == RC_WIRE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    String text = data.getStringExtra(CameraActivity.TextBlockObject);
+//                    statusMessage.setText(R.string.ocr_success);
+                    ((EditText)findViewById(R.id.wire_id)).setText(text);
+                    Log.d("OCR", "Text read: " + text);
+                } else {
+//                    statusMessage.setText(R.string.ocr_failure);
+                    Log.d("OCR", "No Text captured, intent data is null");
+                }
+            } else {
+//                statusMessage.setText(String.format(getString(R.string.ocr_error),
+//                        CommonStatusCodes.getStatusCodeString(resultCode)));
+            }
+        } else if(requestCode == RC_DOC_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    String text = data.getStringExtra(CameraActivity.TextBlockObject);
+                    ((EditText)findViewById(R.id.doc_id)).setText(text);
+                    Log.d("OCR", "Text read: " + text);
+                } else {
+//                    statusMessage.setText(R.string.ocr_failure);
+                    Log.d("OCR", "No Text captured, intent data is null");
+                }
+            } else {
+//                statusMessage.setText(String.format(getString(R.string.ocr_error),
+//                        CommonStatusCodes.getStatusCodeString(resultCode)));
+            }
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
     @Override
     public void onDataReceived(final BluetoothDevice device, final String data) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
