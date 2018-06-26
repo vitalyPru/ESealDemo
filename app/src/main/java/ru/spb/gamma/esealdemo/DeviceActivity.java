@@ -139,7 +139,11 @@ public class DeviceActivity extends AppCompatActivity {
             case R.id.action_about:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("ESealDemo");
-                builder.setMessage("Версия: 1.0");
+                try {
+                    builder.setMessage("Версия: " + this.getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+                } catch (PackageManager.NameNotFoundException ex) {
+
+                }
                 builder.setPositiveButton("OK",       new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,
                                                 int which) {   }});

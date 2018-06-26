@@ -47,5 +47,10 @@
     <string name="txt_message">Номер троса: </string>
     <string name="low_storage_error">Недостаточно памяти</string>
     <string name="no_camera_permission">Нет разрешения для камеры</string>
+    <string name="motion_flag">Движение</string>
+    <string name="move_prompt">Движение:</string>
+    <string name="move_no">нет</string>
+    <string name="lora_accel_prompt">Ускорение:</string>
+    <string name="lora_axis_prompt">Положение:</string>
 
 </resources>

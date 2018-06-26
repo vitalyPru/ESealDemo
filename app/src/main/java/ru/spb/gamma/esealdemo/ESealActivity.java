@@ -83,16 +83,18 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
 
         findViewById(R.id.wire_camera_button).setOnClickListener(v -> {
             Intent intent = new Intent(this, CameraActivity.class);
-            intent.putExtra(CameraActivity.AutoFocus, "true");
-            intent.putExtra(CameraActivity.UseFlash, true);
+            intent.putExtra(CameraActivity.AutoFocus, true);
+            intent.putExtra(CameraActivity.UseFlash, false);
+            intent.putExtra(CameraActivity.BarCodeRecognition, false);
 
             startActivityForResult(intent, RC_WIRE_CAPTURE);
         });
 
         findViewById(R.id.doc_camera_button).setOnClickListener(v -> {
             Intent intent = new Intent(this, CameraActivity.class);
-            intent.putExtra(CameraActivity.AutoFocus, "true");
-            intent.putExtra(CameraActivity.UseFlash, true);
+            intent.putExtra(CameraActivity.AutoFocus, true);
+            intent.putExtra(CameraActivity.UseFlash, false);
+            intent.putExtra(CameraActivity.BarCodeRecognition, true);
 
             startActivityForResult(intent, RC_DOC_CAPTURE);
         });
@@ -177,6 +179,10 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
                 return true;
             case R.id.action_show_log:
                 showLog();
+                return true;
+            case R.id.action_clear_flags:
+                mSendQueue.offer("clear\r\n");
+                send_next();
                 return true;
             // action with ID action_settings was selected
             default:

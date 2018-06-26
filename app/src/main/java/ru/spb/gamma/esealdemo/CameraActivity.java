@@ -34,8 +34,13 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import ru.spb.gamma.esealdemo.ui.camera.CameraSource;
 import ru.spb.gamma.esealdemo.ui.camera.CameraSourcePreview;
 import ru.spb.gamma.esealdemo.ui.camera.GraphicOverlay;
+
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.firebase.FirebaseApp;
 
 import java.io.IOException;
 
@@ -47,15 +52,18 @@ public class CameraActivity extends AppCompatActivity {
 
     // Permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
+    private boolean mBarcodeMode;
 
     // Constants used to pass extra data in the intent
     public static final String AutoFocus = "AutoFocus";
     public static final String UseFlash = "UseFlash";
+    public static final String BarCodeRecognition = "BarCodeRecognition";
     public static final String TextBlockObject = "String";
 
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
-    private GraphicOverlay<OcrGraphic> mGraphicOverlay;
+    private TextView mOcrText;
+    private GraphicOverlay/*<OcrGraphic>*/ mGraphicOverlay;
 
     // Helper objects for detecting taps and pinches.
     private ScaleGestureDetector scaleGestureDetector;
@@ -70,11 +78,13 @@ public class CameraActivity extends AppCompatActivity {
         setContentView(R.layout.activity_camera);
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
-        mGraphicOverlay = (GraphicOverlay<OcrGraphic>) findViewById(R.id.graphicOverlay);
+        mGraphicOverlay = (GraphicOverlay) findViewById(R.id.graphicOverlay);
+//        mOcrText =  findViewById(R.id.ocrData);
 
         // read parameters from the intent used to launch the activity.
         boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
         boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
+        mBarcodeMode = getIntent().getBooleanExtra(BarCodeRecognition, false);
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -88,9 +98,9 @@ public class CameraActivity extends AppCompatActivity {
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
-                Snackbar.LENGTH_LONG)
-                .show();
+//        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
+//                Snackbar.LENGTH_LONG)
+//                .show();
     }
 
     /**
@@ -149,10 +159,21 @@ public class CameraActivity extends AppCompatActivity {
         // A text recognizer is created to find text.  An associated processor instance
         // is set to receive the text recognition results and display graphics for each text block
         // on screen.
-        TextRecognizer textRecognizer = new TextRecognizer.Builder(context).build();
-        textRecognizer.setProcessor(new OcrDetectorProcessor(mGraphicOverlay));
 
-        if (!textRecognizer.isOperational()) {
+        Detector detector;
+        BarcodeDetectorProcessor barcodeProcessor = null;
+        if ( mBarcodeMode ) {
+            detector = new BarcodeDetector.Builder(context).build();
+            barcodeProcessor = new BarcodeDetectorProcessor(mGraphicOverlay);
+            detector.setProcessor(barcodeProcessor);
+        } else {
+
+            detector = /*new MLOcrDetector.Builder(context).build();*/
+                    new TextRecognizer.Builder(context).build();
+            detector.setProcessor(new OcrDetectorProcessor(mGraphicOverlay));
+        }
+
+        if (!detector.isOperational()) {
             // Note: The first time that an app using a Vision API is installed on a
             // device, GMS will download a native libraries to the device in order to do detection.
             // Usually this completes before the app is run for the first time.  But if that
@@ -178,13 +199,16 @@ public class CameraActivity extends AppCompatActivity {
         // Creates and starts the camera.  Note that this uses a higher resolution in comparison
         // to other detection examples to enable the text recognizer to detect small pieces of text.
         mCameraSource =
-                new CameraSource.Builder(getApplicationContext(), textRecognizer)
+                new CameraSource.Builder(getApplicationContext(), detector)
                         .setFacing(CameraSource.CAMERA_FACING_BACK)
                         .setRequestedPreviewSize(1280, 1024)
                         .setRequestedFps(2.0f)
                         .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_TORCH : null)
                         .setFocusMode(autoFocus ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null)
                         .build();
+        if ( mBarcodeMode) {
+             barcodeProcessor.setCameraSource(mCameraSource);
+        }
     }
 
     /**
@@ -250,7 +274,9 @@ public class CameraActivity extends AppCompatActivity {
             // We have permission, so create the camerasource
             boolean autoFocus = getIntent().getBooleanExtra(AutoFocus,false);
             boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
+            mBarcodeMode = getIntent().getBooleanExtra(BarCodeRecognition, false);
             createCameraSource(autoFocus, useFlash);
+
             return;
         }
 
@@ -305,16 +331,26 @@ public class CameraActivity extends AppCompatActivity {
      * @return true if the activity is ending.
      */
     private boolean onTap(float rawX, float rawY) {
-        OcrGraphic graphic = mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
-        TextBlock text = null;
+        GraphicOverlay.Graphic graphic = mGraphicOverlay.getGraphicAtLocation(rawX, rawY);
+        /*TextBlock*/ Object object = null;
         if (graphic != null) {
-            text = graphic.getTextBlock();
-            if (text != null && text.getValue() != null) {
+//            object = graphic.getObject();
+//            if (object != null ) {
                 Intent data = new Intent();
-                data.putExtra(TextBlockObject, text.getValue());
-                setResult(CommonStatusCodes.SUCCESS, data);
-                finish();
-            }
+                String value = null;
+                if ( mBarcodeMode) {
+
+                    Barcode barcode = (Barcode) ((BarcodeGraphic)graphic).getObject();
+                    if ( barcode != null)  value = barcode.rawValue;
+                } else {
+                    TextBlock text = (TextBlock) ((OcrGraphic)graphic).getObject();
+                    if (text != null) value = text.getValue();
+                }
+                if ( value != null) {
+                    data.putExtra(TextBlockObject, value);
+                    setResult(CommonStatusCodes.SUCCESS, data);
+                    finish();
+                }
             else {
                 Log.d(TAG, "text data is null");
             }
@@ -322,7 +358,7 @@ public class CameraActivity extends AppCompatActivity {
         else {
             Log.d(TAG,"no text detected");
         }
-        return text != null;
+        return object != null;
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {

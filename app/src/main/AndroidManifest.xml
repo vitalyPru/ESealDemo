@@ -37,8 +37,10 @@
 
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
-            android:value="ocr" />
-
+            android:value="ocr,barcode" />
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="ocr,barcode" />
     </application>
 
 </manifest>

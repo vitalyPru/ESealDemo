@@ -10,6 +10,9 @@
         android:id="@+id/action_show_log"
         android:title="Log"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_clear_flags"
+        android:title="Очистить флаги" />
     <!-- Color is Brown 500 -->
 
 

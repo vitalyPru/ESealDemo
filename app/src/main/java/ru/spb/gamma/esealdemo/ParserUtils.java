@@ -59,21 +59,25 @@ public class ParserUtils {
         params.add(new TextDispItem("loraHall1=", R.id.loa_hall_1));
         params.add(new TextDispItem("loraHall2=", R.id.lora_hall_2));
         params.add(new TextDispItem("loraRSSI=", R.id.lora_rssi));
-        params.add(new FlagDispItem("wake=", R.id.wake_flag));
+        params.add(new FlagDispItem("wakeState=", R.id.wake_flag));
         params.add(new FlagDispItem("arm=", R.id.arm_flag));
-        params.add(new FlagDispItem("alarm=", R.id.alarm_flag));
+        params.add(new AlarmFlagDispItem("alarm=", R.id.alarm_flag));
         params.add(new FlagDispItem("alert=", R.id.tamper_flag));
         params.add(new FlagDispItem("cable=", R.id.cable_flag));
-        params.add(new BatteryDispItem("bat=", R.id.battery_value , R.id.battery_gauge));
+        params.add(new BatteryDispItem("battery=", R.id.battery_value , R.id.battery_gauge));
         params.add(new TextDispItem("getID=", R.id.wire_id));
         params.add(new TextDispItem("getInvoice=", R.id.doc_id));
+        params.add(new TimeDispItem("alarmTime=", R.id.alarmTime));
+        params.add(new MoveDispItem("move=", R.id.move_value));
+        params.add(new TextDispItem("loraAccel=", R.id.lora_accel));
+        params.add(new TextDispItem("loraAxis=", R.id.lora_axis));
     };
 
     public static Queue<Pair<DispItem,String>> parse_data(String data)
     {
 
         Queue<Pair<DispItem,String>> list = new LinkedList<Pair<DispItem,String>>();
-        String[] lines = data.split("\\r\\n");
+        String[] lines = data.split("[\\r\\n]+");
         for ( String line : lines) {
             for ( DispItem  item: params) {
                 boolean found = line.startsWith( item.protocol_string);
