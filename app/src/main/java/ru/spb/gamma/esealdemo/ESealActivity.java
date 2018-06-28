@@ -269,9 +269,13 @@ public class ESealActivity extends AppCompatActivity implements ESealManagerCall
     }
 
     private void arm() {
-        set_wire();
-        set_doc();
-        mSendQueue.offer("arm\r\n");
+        String text_wire = ((EditText)findViewById(R.id.wire_id)).getText().toString();
+        text_wire = text_wire.replaceAll("\\s+","");
+        ((EditText)findViewById(R.id.wire_id)).setText(text_wire);
+        String text_doc = ((EditText)findViewById(R.id.doc_id)).getText().toString();
+        text_doc = text_doc.replaceAll("\\s+","");
+        ((EditText)findViewById(R.id.doc_id)).setText(text_doc);
+        mSendQueue.offer("setID="+text_wire+"\rsetInvoice=" + text_doc + "\rarm\r\n");
 
     }
 

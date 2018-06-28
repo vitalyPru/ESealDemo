@@ -50,7 +50,8 @@
     <string name="motion_flag">Движение</string>
     <string name="move_prompt">Движение:</string>
     <string name="move_no">нет</string>
-    <string name="lora_accel_prompt">Ускорение:</string>
+    <string name="lora_accel_prompt">Движение:</string>
     <string name="lora_axis_prompt">Положение:</string>
+    <string name="lora_temp_prompt">Температура:</string>
 
 </resources>

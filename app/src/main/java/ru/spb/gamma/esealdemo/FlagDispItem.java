@@ -16,7 +16,7 @@ public class FlagDispItem extends DispItem {
     public void  display_data(Activity activity, String value) {
         CheckedTextView control = activity.findViewById((int)resource_id);
         activity.runOnUiThread(() -> {
-            if ( value.equals("1") ) {
+            if ( !value.equals("0") ) {
                 control.setChecked(true);
             } else {
                 control.setChecked(false);
